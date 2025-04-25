@@ -6,10 +6,20 @@ public class Board
     private boolean isOver = false;
     private int lengthToWin = 3;
     
+    public Board(char[][][] board)
+    {
+        this.board = board;
+    }
+
     public Board(int size)
     {
         board = new char[size][size][size];
         initBoard();
+    }
+
+    public void setOver()
+    {
+        isOver = true;
     }
 
     public boolean isOver() 
@@ -36,7 +46,6 @@ public class Board
         }
 
         board[x][y][z] = player;
-        moveCount++;
         return true;
     }
     
@@ -55,46 +64,43 @@ public class Board
         return true;
     }
     
-    public boolean checkWinner(char player, int x, int y, int z)
-    {
-        int[][] directions = {
-            {0, 1},  // horizontal
-            {1, 0},  // vertical
-            {1, 1},  // diagonal
-            {1, -1}  // anti-diagonal
+    public boolean checkWinner(char player, int x, int y, int z) {
+        // 13 unique direction vectors in 3D (we’ll check both + and −)
+        int[][] dirs = {
+            {1,0,0}, {0,1,0}, {0,0,1},          // axes
+            {1,1,0}, {1,-1,0}, {1,0,1}, {1,0,-1}, {0,1,1}, {0,1,-1},  // face diags
+            {1,1,1}, {1,1,-1}, {1,-1,1}, {1,-1,-1} // space diags
         };
 
-        for (int[] dir : directions) {
-            int count = 1; // current cell
+        for (int[] d : dirs)
+        {
+            for (int i = 0; i < d.length; i++) {
+                System.out.print(d[i] +" ");
+            }
+            int count = 1
+                + countDirection(x, y, z,  d[0],  d[1],  d[2], player) 
+                + countDirection(x, y, z, -d[0], -d[1], -d[2], player);
 
-            // Check one direction
-            count += countDirection(x, y, z, dir[0], dir[1], player);
-            // Check the opposite direction
-            count += countDirection(x, y, z, -dir[0], -dir[1], player);
-
-            if (count >= lengthToWin)
-                return true;
+            if (count >= lengthToWin) return true;
         }
-
         return false;
     }
 
-    int countDirection(int x, int y, int z, int dr, int dc, char player)
+    // count same‐player cells from (x,y,z) stepping by (dx,dy,dz)
+    private int countDirection(int x, int y, int z, int dx, int dy, int dz, int player)
     {
-        int count = 0;
-        int r = y + dr;
-        int c = z + dc;
-
-        while (r >= 0 && r < board.length && c >= 0 && c < board[0].length && board[x][r][c] == player)
+        int size = board.length;
+        int c = 0;
+        int xx = x + dx, yy = y + dy, zz = z + dz;
+        while (xx >= 0 && xx < size && yy >= 0 && yy < size && zz >= 0 && zz < size && board[xx][yy][zz] == player)
         {
-            count++;
-            r += dr;
-            c += dc;
+            c++;
+            xx += dx;
+            yy += dy;
+            zz += dz;
         }
-
-        return count;
+        return c;
     }
-
 
     public void printBoard()
     {

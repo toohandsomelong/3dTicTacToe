@@ -37,14 +37,39 @@ public class Game
 
     private void play()
     {
-        board = new Board(settings.getBoardSize());
+        char[][][] t = {
+            { // Layer z = 0
+                {' ', 'O', 'X'},
+                {'O', 'X', 'O'},
+                {'O', 'X', 'O'}
+            },
+            { // Layer z = 1
+                {'O', 'X', 'O'},
+                {'X', 'O', 'X'},
+                {'X', 'O', 'X'}
+            },
+            { // Layer z = 2
+                {'X', 'O', 'X'},
+                {'O', 'X', 'O'},
+                {'O', 'X', 'O'}
+            }
+          };
+          
+
+        board = new Board(t);
+        // board = new Board(settings.getBoardSize());
         Player player = new Player(settings);
         char currentPlayer = ' ';
 
+        // board.setMove('X', 0, 1, 1);
+        // board.setMove('X', 1, 1, 1);
+        // board.setMove('X', 2, 1, 1);
+        //     boolean winner = board.checkWinner('X', 3, 1, 1);
+        //     System.out.println(winner);
         while (!board.isOver()) 
         {
             currentPlayer = player.currentPlayer();
-            // Utils.clearConsole();
+            Utils.clearConsole();
             board.printBoard();
             System.out.println(currentPlayer + "'s turn: ");
             
@@ -56,8 +81,8 @@ public class Game
             if(!winner)
                 continue;
             
-            System.out.println("Player " + winner + " won!");
-            board.isOver();
+            System.out.println("Player " + currentPlayer + " won!");
+            board.setOver();
         }
     }
 
