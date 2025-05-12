@@ -2,7 +2,7 @@ package Default;
 
 import java.util.Scanner;
 
-public class Game 
+public class Interfaces 
 {
     Settings settings = new Settings();
     Board board = new Board(3);
@@ -37,35 +37,9 @@ public class Game
 
     private void play()
     {
-        char[][][] t = {
-            { // Layer z = 0
-                {' ', 'O', 'X'},
-                {'O', 'X', 'O'},
-                {'O', 'X', 'O'}
-            },
-            { // Layer z = 1
-                {'O', 'X', 'O'},
-                {'X', 'O', 'X'},
-                {'X', 'O', 'X'}
-            },
-            { // Layer z = 2
-                {'X', 'O', 'X'},
-                {'O', 'X', 'O'},
-                {'O', 'X', 'O'}
-            }
-          };
-          
-
-        board = new Board(t);
-        // board = new Board(settings.getBoardSize());
+        board = new Board(settings.getBoardSize());
         Player player = new Player(settings);
         char currentPlayer = ' ';
-
-        // board.setMove('X', 0, 1, 1);
-        // board.setMove('X', 1, 1, 1);
-        // board.setMove('X', 2, 1, 1);
-        //     boolean winner = board.checkWinner('X', 3, 1, 1);
-        //     System.out.println(winner);
         while (!board.isOver()) 
         {
             currentPlayer = player.currentPlayer();
